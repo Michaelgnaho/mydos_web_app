@@ -20,6 +20,7 @@ app.use(
   })
 );
 
+// PostgreSQL client setup
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
@@ -28,25 +29,29 @@ const db = new pg.Client({
   port: 5432,
 });
 
-db.connect();
+db.connect(); // Connect to PostgreSQL database
 
+// Home route
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
+// Login route
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
+// Register route
 app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
+// Register new user
 app.post("/register", async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // Hashing the password with 10 rounds of salt
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with 10 rounds of salt
     const insertQuery =
       'INSERT INTO clients ("firstName", "lastName", username, password) VALUES ($1, $2, $3, $4)';
     await db.query(insertQuery, [
@@ -70,6 +75,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// Login user
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -99,8 +105,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Display user's to-do list
 app.get("/mydos", async (req, res) => {
-  const clientId = req.session.userId;
+  const clientId = req.session.userId; // Get the user ID from the session
   if (!clientId) {
     return res.redirect("/login"); // Redirect to login if not authenticated
   }
@@ -111,15 +118,15 @@ app.get("/mydos", async (req, res) => {
 
     res.render("mydos", {
       listTitle: "My To-Do List",
-      listItems: result.rows,
+      listItems: result.rows, // Pass the fetched list items to the template
     });
   } catch (error) {
     console.error("Error fetching tasks:", error);
-    res.sendStatus(500);
+    res.sendStatus(500); // Server error response
   }
 });
 
-// Add new item
+// Add new item to to-do list
 app.post("/add", async (req, res) => {
   const { newItem, list } = req.body;
   const clientId = req.session.userId; // Ensure this is client_id
@@ -133,14 +140,14 @@ app.post("/add", async (req, res) => {
     const insertQuery =
       "INSERT INTO list_items (title, client_id) VALUES ($1, $2)";
     await db.query(insertQuery, [newItem, clientId]);
-    res.redirect("/mydos");
+    res.redirect("/mydos"); // Redirect to the to-do list page
   } catch (error) {
     console.error("Error adding task:", error);
-    res.sendStatus(500);
+    res.sendStatus(500); // Server error response
   }
 });
 
-// Edit item
+// Edit existing to-do item
 app.post("/edit", async (req, res) => {
   const { updatedItemTitle, updatedItemId } = req.body;
 
@@ -149,23 +156,23 @@ app.post("/edit", async (req, res) => {
       updatedItemTitle,
       updatedItemId,
     ]);
-    res.redirect("/mydos");
+    res.redirect("/mydos"); // Redirect to the to-do list page
   } catch (err) {
     console.log("Error editing task:", err);
-    res.sendStatus(500);
+    res.sendStatus(500); // Server error response
   }
 });
 
-// Delete item
+// Delete to-do item
 app.post("/delete", async (req, res) => {
   const { deleteItemId } = req.body;
 
   try {
     await db.query("DELETE FROM list_items WHERE id = $1", [deleteItemId]);
-    res.redirect("/mydos");
+    res.redirect("/mydos"); // Redirect to the to-do list page
   } catch (err) {
     console.log("Error deleting task:", err);
-    res.sendStatus(500);
+    res.sendStatus(500); // Server error response
   }
 });
 

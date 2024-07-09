@@ -113,9 +113,19 @@ footer {
   flex: 0 0 auto;
   color: rgb(215, 21, 21);
   text-align: center;
+  background-color: #a683e3 !important;
 }
 
 #home {
   background-color: url("/assets/background_image.svg");
   text-align: center;
+}
+.navbar-collapse-right {
+  margin-right: auto !important;
+}
+#navv {
+  background-color: #a683e3 !important;
+}
+#items {
+  position: relative;
 }
