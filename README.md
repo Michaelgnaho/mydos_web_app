@@ -3,10 +3,13 @@ Introduction
 Mydos is a web application that helps users manage their to-do lists. Users can register, log in, and create, edit, or delete tasks linked to their accounts. The application uses Express.js for the server, EJS templates for rendering views, PostgreSQL for the database, and bcrypt for password hashing.
 
 Deployed Site: Mydos
-Project Blog Article: Mydos: Building a Simple To-Do List App
+
+Project Blog Article: Mydos: https://www.linkedin.com/pulse/mydos-comprehensive-to-do-list-application-michael-a-m-a-g-hlvbf
 
 Authors
 Michael Adeyemi Gnaho (MAG) - LinkedIn
+
+
 Installation
 To run this project locally, follow these steps:
 
