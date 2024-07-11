@@ -3,9 +3,12 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import session from "express-session";
+import dotenv from "dotenv"; // Import dotenv to manage environment variables
+
+dotenv.config(); // Load environment variables from .env file
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use PORT from environment variables or default to 3000
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -22,11 +25,10 @@ app.use(
 
 // PostgreSQL client setup
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "World",
-  password: "Mhiekky@",
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 db.connect(); // Connect to PostgreSQL database
@@ -53,14 +55,14 @@ app.post("/register", async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with 10 rounds of salt
     const insertQuery =
-      'INSERT INTO clients ("firstName", "lastName", username, password) VALUES ($1, $2, $3, $4)';
+      "INSERT INTO clients (firstName, lastName, username, password) VALUES ($1, $2, $3, $4)";
     await db.query(insertQuery, [
       firstName,
       lastName,
       username,
       hashedPassword,
     ]);
-    res.render("mydos", {
+    res.render("login", {
       listTitle: "My To-Do List",
       listItems: [], // Pass an empty array
     });
