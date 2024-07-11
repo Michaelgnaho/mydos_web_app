@@ -37,12 +37,10 @@ db.connect(); // Connect to PostgreSQL database
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
-
 // Login route
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
-
 // Register route
 app.get("/register", (req, res) => {
   res.render("register.ejs");
@@ -51,7 +49,6 @@ app.get("/register", (req, res) => {
 // Register new user
 app.post("/register", async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
-
   try {
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with 10 rounds of salt
     const insertQuery =
@@ -62,10 +59,7 @@ app.post("/register", async (req, res) => {
       username,
       hashedPassword,
     ]);
-    res.render("login", {
-      listTitle: "My To-Do List",
-      listItems: [], // Pass an empty array
-    });
+    res.render("login");
   } catch (err) {
     if (err.code === "23505") {
       console.error("Username already exists");

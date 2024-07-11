@@ -7,7 +7,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 95vh;
+  min-height: 100vh;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 main {
   display: flex;
@@ -117,7 +119,7 @@ footer {
 }
 
 #home {
-  background-color: url("/assets/background_image.svg");
+  background-color: url("/assets/background_image.svg") !important;
   text-align: center;
 }
 .navbar-collapse-right {
@@ -128,4 +130,7 @@ footer {
 }
 #items {
   position: relative;
+}
+.con-reg {
+  margin: 20px !important;
 }
